@@ -1,43 +1,82 @@
+import { ContextExclusionPlugin } from "webpack";
+
 const getState = ({ getStore, getActions, setStore }) => {
+	const baseUrl = "https://playground.4geeks.com/contact/agendas/stanxlin_agenda/contacts"
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			contacts: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getContacts: async () => {
+				try {
+					const response = await fetch(baseUrl)
+					const data = await response.json()
+					//console.log(data)
+					setStore({ contacts: data.contacts })
+				} catch (error) {
+					console.log("Error fectching contacts", error)
+				}
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			updateContacts: async (contact) => {
+				let opts = {
+					method: "PUT",
+					headers:{
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(contact)
+				}
+				let response = await fetch(baseUrl + contact.id, opts)
+				if (!response.ok){
+					console.log("An error occured")
+					return false;
+				} else {
+					console.log("Success")
+					return true
+				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+			addContact: async (contact) => {
+				let opts = {
+					method: "POST",
+					headers:{
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(contact)
+				}
+				let response = await fetch(baseUrl, opts)
+				if (!response.ok){
+					console.log("An error occured")
+					return false;
+				} else {
+					console.log("Success")
+					return true
+				}
+			},
 
-				//reset the global store
-				setStore({ demo: demo });
+			deleteContact: async (contact) => {
+				let opts = {
+					method: "DELETE",
+				}
+				let response = await fetch(baseUrl + contact.id, opts)
+				if (!response.ok){
+					console.log("An error occured")
+					return false;
+				} else {
+					console.log("Success")
+					return true
+				}
 			}
+
+			// 	fetch
+			// },
+			// updateContact: async () => {
+			// 	// fetch
+			// },
+			// deleteContact: async () => {
+			// 	// do the delete
+			// 	// refresh store/state
+			// 	getContacts()
+			// }
 		}
 	};
 };
