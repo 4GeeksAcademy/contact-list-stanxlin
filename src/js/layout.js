@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Home } from "./views/home";
 import { Demo } from "./views/demo";
-import { NewContacts } from "./views/newContacts";
+import NewContacts from "./views/newContacts";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -17,13 +17,13 @@ const Layout = () => {
 	return (
 		<div>
 			<BrowserRouter basename={basename}>
-					<Navbar />
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/demo" element={<Demo />} />
-						<Route path="/newcontacts" element={<NewContacts />} />
-						<Route path="*" element={<h1>Not found!</h1>} />
-					</Routes>
+				<Navbar />
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/demo" element={<Demo />} />
+					<Route path="/newContacts" element={<NewContacts />} />
+					<Route path="*" element={<h1>Not found!</h1>} />
+				</Routes>
 			</BrowserRouter>
 		</div>
 	);
